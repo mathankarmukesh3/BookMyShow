@@ -1,0 +1,30 @@
+<div class="page">
+  @if (loading()) {
+    <p class="status">Loading...</p>
+  } @else if (error()) {
+    <p class="status error">{{ error() }}</p>
+    <a routerLink="/movies" class="back-link">← Back to movies</a>
+  } @else if (movie(); as m) {
+    <a routerLink="/movies" class="back-link">← Back to movies</a>
+
+    <div class="detail-layout">
+      @if (m.posterUrl) {
+        <img [src]="m.posterUrl" [alt]="m.title" class="poster" />
+      } @else {
+        <div class="poster placeholder">{{ m.title.charAt(0) }}</div>
+      }
+
+      <div class="info">
+        <h1>{{ m.title }}</h1>
+        <p class="meta">{{ m.genre }} · {{ m.language }} · {{ m.durationMinutes }} min</p>
+        <p class="meta">Released: {{ m.releaseDate | date:'mediumDate' }}</p>
+
+        @if (m.description) {
+          <p class="description">{{ m.description }}</p>
+        }
+
+        <a [routerLink]="['/movies', m.id, 'shows']" class="book-btn">Book Tickets</a>
+      </div>
+    </div>
+  }
+</div>

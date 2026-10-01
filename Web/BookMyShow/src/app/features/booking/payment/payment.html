@@ -1,0 +1,24 @@
+<div class="page">
+  @if (loading()) {
+    <p>Loading...</p>
+  } @else if (error()) {
+    <p class="error">{{ error() }}</p>
+  } @else if (booking(); as b) {
+    <div class="payment-card">
+      <h1>Mock Payment</h1>
+      <p class="hint">This is a fake payment screen for testing — no real charge occurs.</p>
+
+      <div class="amount">₹{{ b.totalAmount }}</div>
+      <p class="seats-count">{{ b.bookingSeats?.length }} seat(s) reserved</p>
+
+      <div class="actions">
+        <button class="pay-btn" [disabled]="processing()" (click)="pay(true)">
+          {{ processing() ? 'Processing...' : 'Simulate Successful Payment' }}
+        </button>
+        <button class="fail-btn" [disabled]="processing()" (click)="pay(false)">
+          Simulate Failed Payment
+        </button>
+      </div>
+    </div>
+  }
+</div>

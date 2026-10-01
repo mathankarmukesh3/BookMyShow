@@ -1,0 +1,44 @@
+<div class="register-container">
+  <form (ngSubmit)="onSubmit()" #registerForm="ngForm" class="register-card">
+    <h2>Create account</h2>
+
+    <label for="name">Name</label>
+    <input
+      id="name"
+      type="text"
+      name="name"
+      [(ngModel)]="name"
+      required
+      minlength="2" />
+
+    <label for="email">Email</label>
+    <input
+      id="email"
+      type="email"
+      name="email"
+      [(ngModel)]="email"
+      required
+      email />
+
+    <label for="password">Password</label>
+    <input
+      id="password"
+      type="password"
+      name="password"
+      [(ngModel)]="password"
+      required
+      minlength="6" />
+
+    @if (errorMessage()) {
+      <p class="error">{{ errorMessage() }}</p>
+    }
+
+    <button type="submit" [disabled]="registerForm.invalid || loading()">
+      {{ loading() ? 'Creating account...' : 'Sign up' }}
+    </button>
+
+    <p class="switch-link">
+      Already have an account? <a routerLink="/login">Log in</a>
+    </p>
+  </form>
+</div>

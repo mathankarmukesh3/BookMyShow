@@ -1,0 +1,85 @@
+<div class="admin-shows">
+  <h1>Manage Shows</h1>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <form (ngSubmit)="addShow()" class="show-form">
+    <div class="form-row">
+      <label>Movie</label>
+      <select [(ngModel)]="form.movieId" name="movieId" required>
+        @for (movie of movies(); track movie.id) {
+          <option [value]="movie.id">{{ movie.title }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label>Venue</label>
+      <select [(ngModel)]="form.venueId" name="venueId" (change)="onVenueChange()" required>
+        @for (venue of venues(); track venue.id) {
+          <option [value]="venue.id">{{ venue.name }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="form-row">
+      <label>Screen</label>
+      <select [(ngModel)]="form.screenId" name="screenId" required>
+        @for (screen of screens(); track screen.id) {
+          <option [value]="screen.id">{{ screen.name }}</option>
+        }
+      </select>
+    </div>
+
+    <div class="form-row two-col">
+      <div>
+        <label>Date</label>
+        <input type="date" [(ngModel)]="form.date" name="date" required />
+      </div>
+      <div>
+        <label>Time</label>
+        <input type="time" [(ngModel)]="form.time" name="time" required />
+      </div>
+    </div>
+
+    <div class="form-row two-col">
+      <div>
+        <label>Duration (min)</label>
+        <input type="number" [(ngModel)]="form.durationMinutes" name="durationMinutes" min="1" required />
+      </div>
+      <div>
+        <label>Base Price (₹)</label>
+        <input type="number" [(ngModel)]="form.basePrice" name="basePrice" min="0" required />
+      </div>
+    </div>
+
+    <button type="submit">Add Show</button>
+  </form>
+
+  <hr />
+
+  @if (loading()) {
+    <p>Loading...</p>
+  } @else {
+    <table class="show-table">
+      <thead>
+        <tr>
+          <th>Movie</th>
+          <th>Start</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (show of shows(); track show.id) {
+          <tr>
+            <td>{{ movieTitle(show.movieId) }}</td>
+            <td>{{ show.startTime | date:'medium' }}</td>
+            <td>₹{{ show.basePrice }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

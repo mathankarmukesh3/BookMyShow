@@ -1,0 +1,21 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# .NET
+bin/
+obj/
+
+# Angular
+node_modules/
+dist/
+.angular/
+
+# Logs
+*.log
+
+# Environment files
+.env
+.env.*
+!.env.example

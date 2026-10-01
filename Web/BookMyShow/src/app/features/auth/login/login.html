@@ -1,0 +1,49 @@
+<div class="stage">
+  <div class="spotlight"></div>
+
+  <div class="login-card">
+    <div class="reel-rail"></div>
+
+    <div class="card-body">
+      <p class="kicker">BookMyShow</p>
+      <h1>Welcome back</h1>
+      <p class="tagline">Sign in to book your next show.</p>
+
+      <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="login-form">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          name="email"
+          [(ngModel)]="email"
+          required
+          email
+          autocomplete="email"
+          #emailField="ngModel" />
+
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          name="password"
+          [(ngModel)]="password"
+          required
+          minlength="6"
+          autocomplete="current-password"
+          #passwordField="ngModel" />
+
+        @if (errorMessage()) {
+          <p class="error">{{ errorMessage() }}</p>
+        }
+
+        <button type="submit" [disabled]="loginForm.invalid || loading()">
+          {{ loading() ? 'Signing in…' : 'Sign in' }}
+        </button>
+      </form>
+
+      <p class="switch-link">
+        New here? <a routerLink="/register">Create an account</a>
+      </p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,16 @@
+<nav class="navbar">
+  <a routerLink="/movies" class="brand">BookMyShow</a>
+
+  <div class="nav-links">
+    @if (auth.currentUser(); as user) {
+      @if (user.role === UserRole.Admin) {
+        <a routerLink="/admin/movies">Admin</a>
+      }
+      <a routerLink="/my-bookings">My Bookings</a>
+      <span class="user-name">{{ user.name }}</span>
+      <button (click)="logout()">Log out</button>
+    } @else {
+      <a routerLink="/login">Log in</a>
+    }
+  </div>
+</nav>

@@ -1,0 +1,275 @@
+.ops-page
+  font-family: 'Inter', sans-serif
+  color: #22222e
+  max-width: 980px
+
+.ops-header
+  margin-bottom: 1.75rem
+
+  h1
+    font-family: 'Fraunces', serif
+    font-weight: 600
+    font-size: 2rem
+    margin: 0 0 0.35rem
+    color: #14141f
+
+  p
+    margin: 0
+    color: #6b6b7a
+    font-size: 0.95rem
+
+.ops-error
+  background: #fdecef
+  color: #a3123b
+  padding: 0.7rem 1rem
+  border-radius: 4px
+  font-size: 0.9rem
+  margin-bottom: 1.25rem
+
+// ---------- Pipeline ----------
+
+.pipeline
+  display: flex
+  list-style: none
+  padding: 0
+  margin: 0 0 2rem
+  gap: 0
+
+  li
+    display: flex
+    align-items: center
+    gap: 0.6rem
+    flex: 1
+    position: relative
+
+    &:not(:last-child)::after
+      content: ''
+      flex: 1
+      height: 1px
+      background: #E3DCC9
+      margin: 0 0.75rem
+
+    .dot
+      width: 28px
+      height: 28px
+      border-radius: 50%
+      border: 1.5px solid #cfc6a8
+      display: flex
+      align-items: center
+      justify-content: center
+      font-family: 'Fraunces', serif
+      font-size: 0.85rem
+      color: #a39c7e
+      flex-shrink: 0
+
+    .label
+      font-size: 0.85rem
+      color: #8a8a97
+
+    &.done .dot
+      background: #B08D3D
+      border-color: #B08D3D
+      color: white
+
+    &.done .label
+      color: #22222e
+
+    &.active .dot
+      background: #E11D48
+      border-color: #E11D48
+      color: white
+
+    &.active .label
+      color: #14141f
+      font-weight: 500
+
+// ---------- Ticket stub forms ----------
+
+.stub-row
+  display: flex
+  gap: 1.5rem
+  margin-bottom: 2rem
+  flex-wrap: wrap
+
+.stub
+  background: #FFFFFF
+  border: 1px solid #E3DCC9
+  flex: 1
+  min-width: 280px
+  padding: 1.25rem 1.4rem
+
+.stub-head h2
+  font-family: 'Fraunces', serif
+  font-weight: 500
+  font-size: 1.15rem
+  margin: 0 0 0.9rem
+  color: #14141f
+
+.stub-form
+  display: flex
+  gap: 0.6rem
+
+  &.stacked
+    flex-direction: column
+    gap: 0.75rem
+
+    label
+      display: flex
+      flex-direction: column
+      gap: 0.3rem
+      font-size: 0.82rem
+      color: #6b6b7a
+
+  input, select
+    padding: 0.55rem 0.65rem
+    border: 1px solid #d8d3c0
+    background: #FAF7F0
+    font-family: 'Inter', sans-serif
+    font-size: 0.9rem
+
+    &:focus
+      outline: 2px solid #E11D48
+      outline-offset: 1px
+
+  input[type="text"]:not(.stacked *)
+    flex: 1
+
+button
+  padding: 0.55rem 1.1rem
+  border: none
+  background: #14141f
+  color: white
+  font-family: 'Inter', sans-serif
+  font-size: 0.85rem
+  font-weight: 500
+  cursor: pointer
+  white-space: nowrap
+
+  &:hover
+    background: #E11D48
+
+  &:disabled
+    background: #cfc9ba
+    cursor: not-allowed
+
+.perforation
+  height: 1px
+  margin: 1rem 0
+  background-image: radial-gradient(circle, #d8d3c0 1px, transparent 1.5px)
+  background-size: 10px 1px
+  background-repeat: repeat-x
+
+.ticket-list
+  list-style: none
+  padding: 0
+  margin: 0
+  display: flex
+  flex-wrap: wrap
+  gap: 0.5rem
+
+  li
+    font-size: 0.85rem
+    padding: 0.3rem 0.7rem
+    background: #FAF7F0
+    border: 1px solid #E3DCC9
+    color: #4a4a58
+
+.muted
+  color: #9a9aa6
+  font-size: 0.88rem
+
+// ---------- Ledger table ----------
+
+.ledger
+  width: 100%
+  border-collapse: collapse
+  margin-bottom: 1.5rem
+
+  th
+    text-align: left
+    font-size: 0.78rem
+    font-weight: 500
+    color: #8a8a97
+    padding: 0.5rem 0.6rem
+    border-bottom: 1px solid #E3DCC9
+
+  td
+    padding: 0.65rem 0.6rem
+    border-bottom: 1px solid #EFEBDF
+    font-size: 0.9rem
+
+    &.primary
+      font-weight: 500
+      color: #14141f
+
+    &.action
+      text-align: right
+
+      button
+        background: transparent
+        color: #E11D48
+        border: 1px solid #E11D48
+        padding: 0.4rem 0.85rem
+        font-size: 0.8rem
+
+        &:hover
+          background: #E11D48
+          color: white
+
+  tr.selected td
+    background: #FDF3EC
+
+  &.compact td
+    padding: 0.5rem 0.6rem
+
+// ---------- Context panels (Screens / Seats) ----------
+
+.context-panel
+  border-top: 1px solid #E3DCC9
+  padding-top: 1.5rem
+  margin-bottom: 2rem
+
+.context-head
+  display: flex
+  align-items: baseline
+  gap: 0.75rem
+  margin-bottom: 1rem
+
+  .context-tag
+    font-size: 0.72rem
+    color: #B08D3D
+    border: 1px solid #B08D3D
+    padding: 0.15rem 0.5rem
+
+  h2
+    font-family: 'Fraunces', serif
+    font-weight: 500
+    font-size: 1.1rem
+    margin: 0
+    color: #14141f
+
+.hint
+  color: #8a8a97
+  font-size: 0.85rem
+  margin: 0 0 1rem
+
+.seat-grid-form
+  display: flex
+  align-items: flex-end
+  gap: 1.25rem
+  flex-wrap: wrap
+
+  label
+    display: flex
+    flex-direction: column
+    gap: 0.3rem
+    font-size: 0.82rem
+    color: #6b6b7a
+
+  input, select
+    padding: 0.55rem 0.65rem
+    border: 1px solid #d8d3c0
+    background: #FAF7F0
+    font-family: 'Inter', sans-serif
+    font-size: 0.9rem
+    width: 110px

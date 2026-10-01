@@ -1,0 +1,123 @@
+.cinema-page
+  min-height: 100vh
+  background: #0B0B14
+  padding: 3rem 2.5rem 4rem
+  font-family: 'Inter', sans-serif
+  position: relative
+
+  &::before
+    content: ''
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    height: 320px
+    background: radial-gradient(ellipse at top, rgba(225, 29, 72, 0.12) 0%, transparent 65%)
+    pointer-events: none
+
+.marquee
+  position: relative
+  max-width: 1200px
+  margin: 0 auto 2.5rem
+
+  h1
+    font-family: 'Fraunces', serif
+    font-weight: 500
+    font-size: 2.4rem
+    color: white
+    margin: 0 0 0.4rem
+
+  .lead
+    color: rgba(255, 255, 255, 0.5)
+    font-size: 0.95rem
+    margin: 0
+
+.status
+  position: relative
+  max-width: 1200px
+  margin: 0 auto
+  color: rgba(255, 255, 255, 0.5)
+  font-size: 0.95rem
+
+  &.error
+    color: #fca5a5
+
+.movie-grid
+  position: relative
+  max-width: 1200px
+  margin: 0 auto
+  display: grid
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr))
+  gap: 1.75rem
+
+.movie-card
+  display: flex
+  flex-direction: column
+  text-decoration: none
+  color: inherit
+
+.poster-wrap
+  position: relative
+  width: 100%
+  aspect-ratio: 2 / 3
+  border-radius: 8px
+  overflow: hidden
+  border: 1px solid rgba(255, 255, 255, 0.08)
+  transition: border-color 0.2s ease, transform 0.2s ease
+  background: #17171f
+
+  .movie-card:hover &
+    border-color: #E11D48
+    transform: translateY(-4px)
+
+  .poster
+    width: 100%
+    height: 100%
+    object-fit: cover
+    display: block
+
+    &.placeholder
+      display: flex
+      align-items: center
+      justify-content: center
+      font-family: 'Fraunces', serif
+      font-size: 3rem
+      color: rgba(255, 255, 255, 0.25)
+
+  .scrim
+    position: absolute
+    inset: 0
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.55) 0%, transparent 45%)
+
+  .hover-cue
+    position: absolute
+    bottom: 0.7rem
+    left: 0.7rem
+    right: 0.7rem
+    font-size: 0.78rem
+    color: white
+    font-weight: 500
+    opacity: 0
+    transform: translateY(4px)
+    transition: opacity 0.2s ease, transform 0.2s ease
+
+  .movie-card:hover &
+    .hover-cue
+      opacity: 1
+      transform: translateY(0)
+
+.movie-info
+  padding-top: 0.75rem
+
+  h3
+    font-family: 'Fraunces', serif
+    font-weight: 500
+    font-size: 1rem
+    color: white
+    margin: 0 0 0.2rem
+    line-height: 1.25
+
+  .meta
+    margin: 0
+    font-size: 0.8rem
+    color: rgba(255, 255, 255, 0.45)

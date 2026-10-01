@@ -1,0 +1,66 @@
+.page
+  max-width: 700px
+  margin: 0 auto
+  padding: 2rem 1.5rem
+
+  h1
+    margin-bottom: 1.5rem
+
+.status
+  color: #666
+
+  &.error
+    color: #dc2626
+
+.browse-link
+  display: inline-block
+  margin-top: 0.75rem
+  color: #e11d48
+  text-decoration: none
+  font-weight: 500
+
+.booking-list
+  display: flex
+  flex-direction: column
+  gap: 0.75rem
+
+.booking-card
+  background: white
+  border: 1px solid #eee
+  border-radius: 8px
+  padding: 1rem 1.25rem
+  border-left: 4px solid #ccc
+
+  &.status-1
+    border-left-color: #16a34a
+
+  &.status-2
+    border-left-color: #dc2626
+
+  &.status-0
+    border-left-color: #f59e0b
+
+  .booking-main
+    display: flex
+    justify-content: space-between
+    align-items: center
+    margin-bottom: 0.4rem
+
+  .badge
+    font-size: 0.8rem
+    font-weight: 600
+    color: #555
+
+  .amount
+    font-size: 1.1rem
+    font-weight: 700
+
+  .meta
+    margin: 0
+    font-size: 0.85rem
+    color: #888
+
+  .ref
+    margin: 0.2rem 0 0
+    font-size: 0.75rem
+    color: #aaa

@@ -1,0 +1,19 @@
+<div class="page">
+  @if (loading()) {
+    <p>Loading...</p>
+  } @else if (booking(); as b) {
+    @if (b.status === BookingStatus.Confirmed) {
+      <div class="result success">
+        <h1>Booking confirmed</h1>
+        <p>₹{{ b.totalAmount }} · {{ b.bookingSeats?.length }} seat(s)</p>
+        <p class="ref">Ref: {{ b.payment?.providerReference }}</p>
+      </div>
+    } @else {
+      <div class="result failed">
+        <h1>Payment failed</h1>
+        <p>Your seats have been released. Please try again.</p>
+      </div>
+    }
+    <a routerLink="/movies" class="back-link">Back to movies</a>
+  }
+</div>

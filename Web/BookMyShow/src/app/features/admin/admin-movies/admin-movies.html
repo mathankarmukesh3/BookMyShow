@@ -1,0 +1,91 @@
+<div class="admin-movies">
+  <h1>Manage Movies</h1>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <form (ngSubmit)="save()" #movieForm="ngForm" class="movie-form">
+    <h3>{{ editingId() === null ? 'Add Movie' : 'Edit Movie' }}</h3>
+
+    <div class="form-row">
+      <label>Title</label>
+      <input type="text" name="title" [(ngModel)]="form.title" required />
+    </div>
+
+    <div class="form-row">
+      <label>Description</label>
+      <textarea name="description" [(ngModel)]="form.description" rows="2"></textarea>
+    </div>
+
+    <div class="form-row two-col">
+      <div>
+        <label>Duration (min)</label>
+        <input type="number" name="durationMinutes" [(ngModel)]="form.durationMinutes" required min="1" />
+      </div>
+      <div>
+        <label>Language</label>
+        <input type="text" name="language" [(ngModel)]="form.language" required />
+      </div>
+    </div>
+
+    <div class="form-row two-col">
+      <div>
+        <label>Genre</label>
+        <input type="text" name="genre" [(ngModel)]="form.genre" required />
+      </div>
+      <div>
+        <label>Release Date</label>
+        <input type="date" name="releaseDate" [(ngModel)]="form.releaseDate" required />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <label>Poster URL</label>
+      <input type="text" name="posterUrl" [(ngModel)]="form.posterUrl" />
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="movieForm.invalid">
+        {{ editingId() === null ? 'Add' : 'Save' }}
+      </button>
+      @if (editingId() !== null) {
+        <button type="button" class="secondary" (click)="cancelEdit()">Cancel</button>
+      }
+    </div>
+  </form>
+
+  <hr />
+
+  @if (loading()) {
+    <p>Loading...</p>
+  } @else {
+    <table class="movie-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Genre</th>
+          <th>Language</th>
+          <th>Duration</th>
+          <th>Released</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (movie of movies(); track movie.id) {
+          <tr>
+            <td>{{ movie.title }}</td>
+            <td>{{ movie.genre }}</td>
+            <td>{{ movie.language }}</td>
+            <td>{{ movie.durationMinutes }} min</td>
+            <td>{{ movie.releaseDate | date:'mediumDate' }}</td>
+            <td class="actions">
+              <button (click)="startEdit(movie)">Edit</button>
+              <button class="danger" (click)="remove(movie)">Delete</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</div>

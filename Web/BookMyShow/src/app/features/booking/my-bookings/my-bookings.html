@@ -1,0 +1,27 @@
+<div class="page">
+  <h1>My Bookings</h1>
+
+  @if (loading()) {
+    <p class="status">Loading...</p>
+  } @else if (error()) {
+    <p class="status error">{{ error() }}</p>
+  } @else if (bookings().length === 0) {
+    <p class="status">You haven't booked any tickets yet.</p>
+    <a routerLink="/movies" class="browse-link">Browse movies</a>
+  } @else {
+    <div class="booking-list">
+      @for (b of bookings(); track b.id) {
+        <div class="booking-card" [class]="'status-' + b.status">
+          <div class="booking-main">
+            <span class="badge">{{ statusLabel(b.status) }}</span>
+            <span class="amount">₹{{ b.totalAmount }}</span>
+          </div>
+          <p class="meta">Booked {{ b.createdAt | date:'medium' }}</p>
+          @if (b.payment?.providerReference) {
+            <p class="ref">Ref: {{ b.payment?.providerReference }}</p>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

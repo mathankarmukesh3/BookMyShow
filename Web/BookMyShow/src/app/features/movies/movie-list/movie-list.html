@@ -1,0 +1,34 @@
+<div class="cinema-page">
+  <header class="marquee">
+    <h1>Now Showing</h1>
+    <p class="lead">Pick a film to see showtimes near you.</p>
+  </header>
+
+  @if (loading()) {
+    <p class="status">Loading movies…</p>
+  } @else if (error()) {
+    <p class="status error">{{ error() }}</p>
+  } @else if (movies().length === 0) {
+    <p class="status">No movies available yet.</p>
+  } @else {
+    <div class="movie-grid">
+      @for (movie of movies(); track movie.id) {
+        <a [routerLink]="['/movies', movie.id]" class="movie-card">
+          <div class="poster-wrap">
+            @if (movie.posterUrl) {
+              <img [src]="movie.posterUrl" [alt]="movie.title" class="poster" />
+            } @else {
+              <div class="poster placeholder">{{ movie.title.charAt(0) }}</div>
+            }
+            <div class="scrim"></div>
+            <span class="hover-cue">View showtimes</span>
+          </div>
+          <div class="movie-info">
+            <h3>{{ movie.title }}</h3>
+            <p class="meta">{{ movie.genre }} · {{ movie.language }}</p>
+          </div>
+        </a>
+      }
+    </div>
+  }
+</div>

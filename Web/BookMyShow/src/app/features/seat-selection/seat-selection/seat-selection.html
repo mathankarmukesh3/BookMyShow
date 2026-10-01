@@ -1,0 +1,64 @@
+<div class="page">
+  @if (loading()) {
+    <p class="status">Loading seat map...</p>
+  } @else if (error()) {
+    <p class="status error">{{ error() }}</p>
+  } @else if (show(); as s) {
+    <a routerLink="/movies" class="back-link">← Back to movies</a>
+
+    <div class="show-header">
+      <h1>{{ s.movie?.title }}</h1>
+      <p class="sub">{{ s.screen?.venue?.name }} · {{ s.screen?.name }} · {{ s.startTime | date:'medium' }}</p>
+    </div>
+
+    <div class="screen-indicator">Screen this way</div>
+
+    <div class="seat-map">
+      @for (r of rows(); track r.row) {
+        <div class="seat-row">
+          <span class="row-label">{{ r.row }}</span>
+          <div class="seats">
+            @for (showSeat of r.seats; track showSeat.id) {
+              <button
+                class="seat"
+                [class.available]="showSeat.status === ShowSeatStatus.Available"
+                [class.booked]="showSeat.status === ShowSeatStatus.Booked"
+                [class.locked]="showSeat.status === ShowSeatStatus.Locked"
+                [class.selected]="isSelected(showSeat)"
+                [disabled]="showSeat.status !== ShowSeatStatus.Available"
+                (click)="toggleSeat(showSeat)"
+                [title]="seatLabel(showSeat.seat) + ' · ₹' + showSeat.price">
+                {{ showSeat.seat?.number }}
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="legend">
+      <span><i class="dot available"></i> Available</span>
+      <span><i class="dot selected"></i> Selected</span>
+      <span><i class="dot locked"></i> Held</span>
+      <span><i class="dot booked"></i> Booked</span>
+    </div>
+
+    @if (bookingError()) {
+  <p class="booking-error">{{ bookingError() }}</p>
+}
+
+    <div class="checkout-bar">
+      <div class="summary">
+        @if (selectedSeats().length > 0) {
+          <span class="seat-list">{{ selectedSeats().length }} seat(s): {{ selectedSeats().map(ss => seatLabel(ss.seat)).join(', ') }}</span>
+          <span class="total">₹{{ totalPrice() }}</span>
+        } @else {
+          <span class="hint">Select seats to continue</span>
+        }
+      </div>
+       <button class="proceed-btn" [disabled]="selectedSeats().length === 0 || booking()" (click)="proceedToPayment()">
+            {{ booking() ? 'Booking...' : 'Proceed to Payment' }}
+        </button>
+    </div>
+  }
+</div>

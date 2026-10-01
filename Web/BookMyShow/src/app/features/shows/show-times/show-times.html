@@ -1,0 +1,32 @@
+<div class="page">
+  <a routerLink="/movies" class="back-link">← Back to movies</a>
+
+  @if (movie(); as m) {
+    <h1>{{ m.title }}</h1>
+    <p class="sub">Choose a showtime</p>
+  }
+
+  @if (loading()) {
+    <p class="status">Loading showtimes...</p>
+  } @else if (error()) {
+    <p class="status error">{{ error() }}</p>
+  } @else if (shows().length === 0) {
+    <p class="status">No showtimes scheduled yet for this movie.</p>
+  } @else {
+    <div class="show-list">
+      @for (show of shows(); track show.id) {
+        <a [routerLink]="['/shows', show.id, 'seats']" class="show-card">
+          <div class="venue">
+            <strong>{{ venueName(show) }}</strong>
+            <span>{{ screenName(show) }}</span>
+          </div>
+          <div class="time">
+            <span class="date">{{ show.startTime | date:'EEE, MMM d' }}</span>
+            <span class="clock">{{ show.startTime | date:'shortTime' }}</span>
+          </div>
+          <div class="price">₹{{ show.basePrice }}</div>
+        </a>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,158 @@
+<div class="ops-page">
+  <header class="ops-header">
+    <h1>Set up your box office</h1>
+    <p>Cities, venues, screens and seat layouts — in the order you'll need them.</p>
+  </header>
+
+  @if (error()) {
+    <p class="ops-error">{{ error() }}</p>
+  }
+
+  <ol class="pipeline">
+    <li class="done">
+      <span class="dot">1</span>
+      <span class="label">City</span>
+    </li>
+    <li [class.done]="venues().length > 0">
+      <span class="dot">2</span>
+      <span class="label">Venue</span>
+    </li>
+    <li [class.active]="selectedVenueId() !== null" [class.done]="screens().length > 0 && selectedVenueId() !== null">
+      <span class="dot">3</span>
+      <span class="label">Screen</span>
+    </li>
+    <li [class.active]="selectedScreenId() !== null">
+      <span class="dot">4</span>
+      <span class="label">Seats</span>
+    </li>
+  </ol>
+
+  <div class="stub-row">
+    <section class="stub">
+      <div class="stub-head">
+        <h2>Add a city</h2>
+      </div>
+      <form (ngSubmit)="addCity()" class="stub-form">
+        <input type="text" [(ngModel)]="newCityName" name="cityName" placeholder="City name" required />
+        <button type="submit">Add</button>
+      </form>
+      <div class="perforation"></div>
+      <ul class="ticket-list">
+        @for (city of cities(); track city.id) {
+          <li>{{ city.name }}</li>
+        } @empty {
+          <li class="muted">No cities yet</li>
+        }
+      </ul>
+    </section>
+
+    <section class="stub">
+      <div class="stub-head">
+        <h2>Add a venue</h2>
+      </div>
+      <form (ngSubmit)="addVenue()" class="stub-form stacked">
+        <label>
+          <span>Name</span>
+          <input type="text" [(ngModel)]="venueForm.name" name="venueName" required />
+        </label>
+        <label>
+          <span>Address</span>
+          <input type="text" [(ngModel)]="venueForm.address" name="venueAddress" required />
+        </label>
+        <label>
+          <span>City</span>
+          <select [(ngModel)]="venueForm.cityId" name="venueCity" required>
+            @for (city of cities(); track city.id) {
+              <option [value]="city.id">{{ city.name }}</option>
+            }
+          </select>
+        </label>
+        <button type="submit" [disabled]="cities().length === 0">Add venue</button>
+      </form>
+    </section>
+  </div>
+
+  @if (loading()) {
+    <p class="muted">Loading…</p>
+  } @else {
+    <table class="ledger">
+      <thead>
+        <tr>
+          <th>Venue</th>
+          <th>Address</th>
+          <th>City</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (venue of venues(); track venue.id) {
+          <tr [class.selected]="selectedVenueId() === venue.id">
+            <td class="primary">{{ venue.name }}</td>
+            <td>{{ venue.address }}</td>
+            <td>{{ cityName(venue.cityId) }}</td>
+            <td class="action"><button (click)="manageScreens(venue.id)">Manage screens</button></td>
+          </tr>
+        } @empty {
+          <tr><td colspan="4" class="muted">No venues yet — add one above.</td></tr>
+        }
+      </tbody>
+    </table>
+  }
+
+  @if (selectedVenueId(); as venueId) {
+    <section class="context-panel">
+      <div class="context-head">
+        <span class="context-tag">Step 3</span>
+        <h2>Screens at {{ venueName(venueId) }}</h2>
+      </div>
+
+      <form (ngSubmit)="addScreen()" class="stub-form">
+        <input type="text" [(ngModel)]="screenForm.name" name="screenName" placeholder="e.g. Screen 1" required />
+        <button type="submit">Add screen</button>
+      </form>
+
+      <table class="ledger compact">
+        <tbody>
+          @for (screen of screens(); track screen.id) {
+            <tr [class.selected]="selectedScreenId() === screen.id">
+              <td class="primary">{{ screen.name }}</td>
+              <td class="action"><button (click)="manageSeats(screen.id)">Set up seats</button></td>
+            </tr>
+          } @empty {
+            <tr><td class="muted">No screens yet — add one above.</td></tr>
+          }
+        </tbody>
+      </table>
+    </section>
+  }
+
+  @if (selectedScreenId(); as screenId) {
+    <section class="context-panel">
+      <div class="context-head">
+        <span class="context-tag">Step 4</span>
+        <h2>Seat layout for {{ screenName(screenId) }}</h2>
+      </div>
+      <p class="hint">Generates a simple grid — rows lettered A, B, C… with the seat count you set below.</p>
+
+      <div class="seat-grid-form">
+        <label>
+          <span>Rows</span>
+          <input type="number" [(ngModel)]="seatRows" name="seatRows" min="1" max="26" />
+        </label>
+        <label>
+          <span>Seats per row</span>
+          <input type="number" [(ngModel)]="seatsPerRow" name="seatsPerRow" min="1" max="30" />
+        </label>
+        <label>
+          <span>Seat type</span>
+          <select [(ngModel)]="seatType" name="seatType">
+            <option [value]="0">Regular</option>
+            <option [value]="1">Premium</option>
+            <option [value]="2">Recliner</option>
+          </select>
+        </label>
+        <button type="button" (click)="generateSeats()">Generate seats</button>
+      </div>
+    </section>
+  }
+</div>
