@@ -12,9 +12,15 @@ public class MoviesController : ControllerBase
     private readonly ApplicationDbContext _db;
     public MoviesController(ApplicationDbContext db) => _db = db;
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Movie>>> GetAll()
-        => Ok(await _db.Movies.OrderByDescending(m => m.ReleaseDate).ToListAsync());
+[HttpGet]
+public async Task<IActionResult> GetAll()
+{
+    var movies = await _db.Movies
+        .OrderByDescending(m => m.ReleaseDate)
+        .ToListAsync();
+
+    return Ok(movies);
+}
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Movie>> GetById(int id)
