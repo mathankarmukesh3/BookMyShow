@@ -1,15 +1,22 @@
 <div class="cinema-page">
   <header class="marquee">
-    <h1>Now Showing</h1>
-    <p class="lead">Pick a film to see showtimes near you.</p>
+    @if (selectedCity.city(); as city) {
+      <h1>Now Showing in {{ city.name }}</h1>
+      <p class="lead">Pick a film to see theatres, screens and timings in {{ city.name }}.</p>
+    } @else {
+      <h1>Now Showing</h1>
+      <p class="lead">Select your city from the top bar.</p>
+    }
   </header>
 
   @if (loading()) {
     <p class="status">Loading movies…</p>
   } @else if (error()) {
     <p class="status error">{{ error() }}</p>
+  } @else if (!selectedCity.city()) {
+    <p class="status">No cities have been set up yet.</p>
   } @else if (movies().length === 0) {
-    <p class="status">No movies available yet.</p>
+    <p class="status">No upcoming shows in {{ selectedCity.city()?.name }}. Try another city.</p>
   } @else {
     <div class="movie-grid">
       @for (movie of movies(); track movie.id) {

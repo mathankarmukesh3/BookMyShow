@@ -11,8 +11,10 @@ export class MovieService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(): Observable<Movie[]> {
-    return this.http.get<Movie[]>(this.apiUrl);
+  /** No cityId = all movies (admin). With cityId = only movies showing in that city. */
+  getAll(cityId?: number): Observable<Movie[]> {
+    const url = cityId ? `${this.apiUrl}?cityId=${cityId}` : this.apiUrl;
+    return this.http.get<Movie[]>(url);
   }
 
   getById(id: number): Observable<Movie> {

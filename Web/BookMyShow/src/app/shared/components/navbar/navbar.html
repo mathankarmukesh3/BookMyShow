@@ -1,5 +1,18 @@
 <nav class="navbar">
-  <a routerLink="/movies" class="brand">BookMyShow</a>
+  <div class="left">
+    <a routerLink="/movies" class="brand">BookMyShow</a>
+
+    @if (cities().length) {
+      <label class="city-picker">
+        <span class="pin">📍</span>
+        <select aria-label="Select city" (change)="onCityChange($any($event.target).value)">
+          @for (c of cities(); track c.id) {
+            <option [value]="c.id" [selected]="c.id === selectedCity.city()?.id">{{ c.name }}</option>
+          }
+        </select>
+      </label>
+    }
+  </div>
 
   <div class="nav-links">
     @if (auth.currentUser(); as user) {

@@ -39,7 +39,11 @@
       <div class="perforation"></div>
       <ul class="ticket-list">
         @for (city of cities(); track city.id) {
-          <li>{{ city.name }}</li>
+          <li class="city-chip">
+            {{ city.name }}
+            <button type="button" class="chip-delete" (click)="deleteCity(city)"
+                    [attr.aria-label]="'Delete ' + city.name" title="Delete city">✕</button>
+          </li>
         } @empty {
           <li class="muted">No cities yet</li>
         }
@@ -63,7 +67,7 @@
           <span>City</span>
           <select [(ngModel)]="venueForm.cityId" name="venueCity" required>
             @for (city of cities(); track city.id) {
-              <option [value]="city.id">{{ city.name }}</option>
+              <option [ngValue]="city.id">{{ city.name }}</option>
             }
           </select>
         </label>
@@ -146,9 +150,9 @@
         <label>
           <span>Seat type</span>
           <select [(ngModel)]="seatType" name="seatType">
-            <option [value]="0">Regular</option>
-            <option [value]="1">Premium</option>
-            <option [value]="2">Recliner</option>
+            <option [ngValue]="0">Regular</option>
+            <option [ngValue]="1">Premium</option>
+            <option [ngValue]="2">Recliner</option>
           </select>
         </label>
         <button type="button" (click)="generateSeats()">Generate seats</button>

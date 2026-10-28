@@ -70,6 +70,29 @@ export class AdminVenues implements OnInit {
     });
   }
 
+  deleteCity(city: City): void {
+    const venueCount = this.venues().filter(v => v.cityId === city.id).length;
+    const warning = venueCount
+      ? `Delete ${city.name}?\n\nThis also deletes its ${venueCount} venue(s), their screens, seats and all shows.`
+      : `Delete ${city.name}?`;
+    if (!confirm(warning)) return;
+
+    this.error.set(null);
+    this.cityService.delete(city.id).subscribe({
+      next: () => {
+        // Close the screen/seat panels if they belonged to a deleted venue
+        const openVenue = this.venues().find(v => v.id === this.selectedVenueId());
+        if (openVenue?.cityId === city.id) {
+          this.selectedVenueId.set(null);
+          this.selectedScreenId.set(null);
+        }
+        this.venueForm.cityId = 0;
+        this.load();
+      },
+      error: (err) => this.error.set(err?.error?.message ?? `Failed to delete ${city.name}.`)
+    });
+  }
+
   addVenue(): void {
     if (!this.venueForm.name.trim() || !this.venueForm.cityId) return;
     this.venueService.create({ ...this.venueForm }).subscribe({
@@ -137,16 +160,13 @@ export class AdminVenues implements OnInit {
       next: () => alert(`${seats.length} seats created.`),
       error: () => this.error.set('Failed to create seats.')
     });
-
-
-    
   }
 
   venueName(id: number): string {
-  return this.venues().find(v => v.id === id)?.name ?? '—';
-}
+    return this.venues().find(v => v.id === id)?.name ?? '—';
+  }
 
-screenName(id: number): string {
-  return this.screens().find(s => s.id === id)?.name ?? '—';
-}
+  screenName(id: number): string {
+    return this.screens().find(s => s.id === id)?.name ?? '—';
+  }
 }

@@ -3,29 +3,56 @@
 
   @if (movie(); as m) {
     <h1>{{ m.title }}</h1>
-    <p class="sub">Choose a showtime</p>
+    <p class="sub">
+      {{ m.language }} · {{ m.durationMinutes }} min
+      @if (selectedCity.city(); as city) { · Showtimes in <strong>{{ city.name }}</strong> }
+    </p>
   }
 
   @if (loading()) {
     <p class="status">Loading showtimes...</p>
   } @else if (error()) {
     <p class="status error">{{ error() }}</p>
+  } @else if (!selectedCity.city()) {
+    <p class="status">Select a city from the top bar.</p>
   } @else if (shows().length === 0) {
-    <p class="status">No showtimes scheduled yet for this movie.</p>
+    <p class="status">No upcoming shows in {{ selectedCity.city()?.name }}. Try another city.</p>
   } @else {
-    <div class="show-list">
-      @for (show of shows(); track show.id) {
-        <a [routerLink]="['/shows', show.id, 'seats']" class="show-card">
-          <div class="venue">
-            <strong>{{ venueName(show) }}</strong>
-            <span>{{ screenName(show) }}</span>
-          </div>
-          <div class="time">
-            <span class="date">{{ show.startTime | date:'EEE, MMM d' }}</span>
-            <span class="clock">{{ show.startTime | date:'shortTime' }}</span>
-          </div>
-          <div class="price">₹{{ show.basePrice }}</div>
-        </a>
+
+    <div class="date-tabs">
+      @for (day of dates(); track day) {
+        <button type="button" class="date-tab"
+                [class.active]="day === selectedDate()"
+                (click)="selectDate(day)">
+          <span class="dow">{{ dayToDate(day) | date:'EEE' }}</span>
+          <span class="dom">{{ dayToDate(day) | date:'d' }}</span>
+          <span class="mon">{{ dayToDate(day) | date:'MMM' }}</span>
+        </button>
+      }
+    </div>
+
+    <div class="venue-list">
+      @for (venue of venues(); track venue.venueId) {
+        <section class="venue-card">
+          <header>
+            <h2>{{ venue.venueName }}</h2>
+            @if (venue.address) { <p class="address">{{ venue.address }}</p> }
+          </header>
+
+          @for (screen of venue.screens; track screen.screenId) {
+            <div class="screen-row">
+              <span class="screen-name">{{ screen.screenName }}</span>
+              <div class="time-chips">
+                @for (show of screen.shows; track show.id) {
+                  <a [routerLink]="['/shows', show.id, 'seats']" class="time-chip">
+                    <span class="clock">{{ show.startTime | date:'shortTime' }}</span>
+                    <span class="price">₹{{ show.basePrice }}</span>
+                  </a>
+                }
+              </div>
+            </div>
+          }
+        </section>
       }
     </div>
   }
