@@ -1,41 +1,57 @@
 <div class="admin-shows">
   <h1>Manage Shows</h1>
+  <p class="hint">Choose where the show plays (city → venue → screen), then which movie and when.</p>
 
-  @if (error()) {
-    <p class="error">{{ error() }}</p>
-  }
+  @if (error()) { <p class="error">{{ error() }}</p> }
+  @if (success()) { <p class="success">{{ success() }}</p> }
 
   <form (ngSubmit)="addShow()" class="show-form">
     <div class="form-row">
-      <label>Movie</label>
-      <select [(ngModel)]="form.movieId" name="movieId" required>
-        @for (movie of movies(); track movie.id) {
-          <option [value]="movie.id">{{ movie.title }}</option>
+      <label>1. City</label>
+      <select [(ngModel)]="form.cityId" name="cityId" (ngModelChange)="form.cityId = $event; onCityChange()" required>
+        @for (city of cities(); track city.id) {
+          <option [ngValue]="city.id">{{ city.name }}</option>
         }
       </select>
     </div>
 
     <div class="form-row">
-      <label>Venue</label>
-      <select [(ngModel)]="form.venueId" name="venueId" (change)="onVenueChange()" required>
+      <label>2. Venue</label>
+      <select [(ngModel)]="form.venueId" name="venueId" (ngModelChange)="form.venueId = $event; onVenueChange()"
+              [disabled]="venues().length === 0" required>
         @for (venue of venues(); track venue.id) {
-          <option [value]="venue.id">{{ venue.name }}</option>
+          <option [ngValue]="venue.id">{{ venue.name }}</option>
         }
       </select>
+      @if (form.cityId && venues().length === 0) {
+        <small class="warn">No venues in {{ cityName(form.cityId) }} yet. Add one on the Venues page.</small>
+      }
     </div>
 
     <div class="form-row">
-      <label>Screen</label>
-      <select [(ngModel)]="form.screenId" name="screenId" required>
+      <label>3. Screen</label>
+      <select [(ngModel)]="form.screenId" name="screenId" [disabled]="screens().length === 0" required>
         @for (screen of screens(); track screen.id) {
-          <option [value]="screen.id">{{ screen.name }}</option>
+          <option [ngValue]="screen.id">{{ screen.name }}</option>
+        }
+      </select>
+      @if (form.venueId && screens().length === 0) {
+        <small class="warn">This venue has no screens yet. Add a screen and its seats on the Venues page.</small>
+      }
+    </div>
+
+    <div class="form-row">
+      <label>4. Movie</label>
+      <select [(ngModel)]="form.movieId" name="movieId" (ngModelChange)="form.movieId = $event; onMovieChange()" required>
+        @for (movie of movies(); track movie.id) {
+          <option [ngValue]="movie.id">{{ movie.title }}</option>
         }
       </select>
     </div>
 
     <div class="form-row two-col">
       <div>
-        <label>Date</label>
+        <label>5. Date</label>
         <input type="date" [(ngModel)]="form.date" name="date" required />
       </div>
       <div>
@@ -60,6 +76,19 @@
 
   <hr />
 
+  <div class="table-head">
+    <h2>Scheduled shows</h2>
+    <label class="filter">
+      City
+      <select [ngModel]="tableCityId()" (ngModelChange)="tableCityId.set($event)" name="tableCity">
+        <option [ngValue]="0">All cities</option>
+        @for (city of cities(); track city.id) {
+          <option [ngValue]="city.id">{{ city.name }}</option>
+        }
+      </select>
+    </label>
+  </div>
+
   @if (loading()) {
     <p>Loading...</p>
   } @else {
@@ -67,17 +96,25 @@
       <thead>
         <tr>
           <th>Movie</th>
+          <th>City</th>
+          <th>Venue</th>
+          <th>Screen</th>
           <th>Start</th>
           <th>Price</th>
         </tr>
       </thead>
       <tbody>
-        @for (show of shows(); track show.id) {
+        @for (show of visibleShows(); track show.id) {
           <tr>
-            <td>{{ movieTitle(show.movieId) }}</td>
+            <td>{{ show.movie?.title ?? movieTitle(show.movieId) }}</td>
+            <td>{{ show.screen?.venue?.city?.name ?? cityName(show.screen?.venue?.cityId) }}</td>
+            <td>{{ show.screen?.venue?.name ?? '—' }}</td>
+            <td>{{ show.screen?.name ?? '—' }}</td>
             <td>{{ show.startTime | date:'medium' }}</td>
             <td>₹{{ show.basePrice }}</td>
           </tr>
+        } @empty {
+          <tr><td colspan="6" class="muted">No shows for this city yet.</td></tr>
         }
       </tbody>
     </table>

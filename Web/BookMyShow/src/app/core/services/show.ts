@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Show } from '../models/show.model';
 import { environment } from '../../environments/environment';
@@ -10,9 +10,12 @@ export class ShowService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(movieId?: number): Observable<Show[]> {
-    const url = movieId ? `${this.apiUrl}?movieId=${movieId}` : this.apiUrl;
-    return this.http.get<Show[]>(url);
+  getAll(movieId?: number, cityId?: number, upcomingOnly = false): Observable<Show[]> {
+    let params = new HttpParams();
+    if (movieId) params = params.set('movieId', movieId);
+    if (cityId) params = params.set('cityId', cityId);
+    if (upcomingOnly) params = params.set('upcomingOnly', true);
+    return this.http.get<Show[]>(this.apiUrl, { params });
   }
 
   getById(id: number): Observable<Show> {

@@ -12,15 +12,21 @@ public class ShowsController : ControllerBase
     private readonly ApplicationDbContext _db;
     public ShowsController(ApplicationDbContext db) => _db = db;
 
-    // GET api/shows?movieId=1
+    // GET api/shows?movieId=1&cityId=2&upcomingOnly=true
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Show>>> GetAll([FromQuery] int? movieId)
+    public async Task<ActionResult<IEnumerable<Show>>> GetAll(
+        [FromQuery] int? movieId,
+        [FromQuery] int? cityId,
+        [FromQuery] bool upcomingOnly = false)
     {
         var query = _db.Shows
-            .Include(s => s.Screen).ThenInclude(sc => sc.Venue)
+            .Include(s => s.Movie)
+            .Include(s => s.Screen).ThenInclude(sc => sc!.Venue).ThenInclude(v => v!.City)
             .AsQueryable();
 
         if (movieId.HasValue) query = query.Where(s => s.MovieId == movieId.Value);
+        if (cityId.HasValue) query = query.Where(s => s.Screen!.Venue!.CityId == cityId.Value);
+        if (upcomingOnly) query = query.Where(s => s.StartTime >= DateTime.UtcNow);
 
         return Ok(await query.OrderBy(s => s.StartTime).ToListAsync());
     }
@@ -30,7 +36,7 @@ public class ShowsController : ControllerBase
     public async Task<ActionResult<Show>> GetById(int id)
     {
         var show = await _db.Shows
-            .Include(s => s.Screen).ThenInclude(sc => sc.Venue)
+            .Include(s => s.Screen).ThenInclude(sc => sc!.Venue)
             .Include(s => s.ShowSeats).ThenInclude(ss => ss.Seat)
             .FirstOrDefaultAsync(s => s.Id == id);
 
